@@ -20,6 +20,8 @@ public class PageAdapter extends FragmentPagerAdapter {
                 return new CalcFragment();
             case 1:
                 return new TimFragment();
+            case 2:
+                return new AddressBookFragment();
             default:
                 return null;
         }

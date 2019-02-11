@@ -165,7 +165,7 @@ public class TimFragment extends Fragment {
                     }
 
                 }
-            }, 0, 10);
+            }, 0, 27);
         }
 
 
