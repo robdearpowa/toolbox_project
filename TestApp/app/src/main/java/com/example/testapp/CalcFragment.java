@@ -206,7 +206,7 @@ public class CalcFragment extends Fragment implements JavascriptInterface{
 
     private void writeNumber(int value){
         String text  = txtCalc.getText().toString();
-        if(text.equals("0")){
+        if(text.equals("0") || text.equals("Indefinito")){
             text = ""+value;
         }
         else{
@@ -218,6 +218,9 @@ public class CalcFragment extends Fragment implements JavascriptInterface{
 
     private void writeDot(){
         String text = txtCalc.getText().toString();
+        if(text.equals("Indefinito")){
+            text = "0";
+        }
         Pattern p = Pattern.compile("([0-9]{0,100}[.]{0})\\w+");
         Matcher m = p.matcher(text);
         if(m.matches()){
@@ -292,8 +295,15 @@ public class CalcFragment extends Fragment implements JavascriptInterface{
                 break;
             case DIV:
                 updateActualNumber();
-                double div = lastNumber/actualNumber;
-                resetTxtCalc(""+div);
+                if(actualNumber != 0){
+                    double div = lastNumber/actualNumber;
+                    resetTxtCalc(""+div);
+                }
+                else{
+                    resetTxtCalc("Indefinito");
+                    lastNumber = 0;
+                }
+
                 operationExec = Operator.NOTHING;
                 break;
             case NOTHING:
