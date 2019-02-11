@@ -232,7 +232,7 @@ public class CalcFragment extends Fragment implements JavascriptInterface{
 
     private void deleteLastChar(){
         String text = txtCalc.getText().toString();
-        if(text.length() > 1){
+        if(text.length() > 1 && !text.equals("Indefinito")){
             text = text.substring(0, text.length() - 1);
         }
         else{
@@ -255,6 +255,13 @@ public class CalcFragment extends Fragment implements JavascriptInterface{
     }
 
     private void checkOperation(Operator op){
+
+        String text = txtCalc.getText().toString();
+
+        if(text.equals("Indefinito")){
+            resetTxtCalc("0");
+        }
+
         if(operationExec.equals(Operator.NOTHING) && !op.equals(Operator.NOTHING)){
             startOperation(op);
         }
