@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 
-public class MainTestActivity extends AppCompatActivity implements TimFragment.OnFragmentInteractionListener, CalcFragment.OnFragmentInteractionListener, AddressBookFragment.OnFragmentInteractionListener {
+public class MainTestActivity extends AppCompatActivity implements TimFragment.OnFragmentInteractionListener, CalcFragment.OnFragmentInteractionListener, AddressBookFragment.OnFragmentInteractionListener, MemoFragment.OnFragmentInteractionListener {
 
     private Toolbar toolbar;
     private TabItem tabCalc;

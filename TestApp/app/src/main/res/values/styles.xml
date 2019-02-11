@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
     <style name="dividerBase">
@@ -45,7 +44,8 @@
     </style>
 
     <style name="delButton">
-        <item name="android:backgroundTint">@android:color/holo_red_light</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:backgroundTint">@android:color/holo_red_dark</item>
         <item name="android:textSize">20dp</item>
     </style>
 </resources>
