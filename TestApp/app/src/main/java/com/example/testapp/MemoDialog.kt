@@ -15,7 +15,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.memo_dialog.*
 import kotlinx.android.synthetic.main.memo_dialog.view.*
 
-class MemoDialog() : DialogFragment(){
+class MemoDialog : DialogFragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return super.onCreateView(inflater, container, savedInstanceState)
