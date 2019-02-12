@@ -1,41 +1,58 @@
 package com.example.testapp
 
 import android.content.Context
+import android.os.MemoryFile
 import android.support.v7.widget.RecyclerView
 import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.memo_layout.view.*
 import java.util.zip.Inflater
+import android.widget.Toast
 
-class MemoListAdapter(memoList: MutableList<Memo>?, context: Context?) : RecyclerView.Adapter<MemoListAdapter.ViewHolder>(){
 
-    var memoList : MutableList<Memo>? = memoList
-    var contex : Context? = context
+
+class MemoListAdapter(var context: Context?) : RecyclerView.Adapter<MemoListAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val li : LayoutInflater = contex?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val li : LayoutInflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         val v = li.inflate(R.layout.memo_layout, null)
+
+        v.setOnClickListener(View.OnClickListener { v ->
+            var itemPos : Int = MemoFragment.instance.memoListXML!!.getChildAdapterPosition(v)
+            MemoFragment.instance.lastMemoSelected = itemPos
+            var mdm : MemoDialogModify = MemoDialogModify()
+            mdm.show(MemoFragment.instance.fragmentManager, "MemoModify")
+
+        })
 
         return ViewHolder(v)
     }
 
     override fun getItemCount(): Int {
-        return memoList?.size ?: 0
+        return Memo.memoList?.size ?: Memo.emptyMemoList.size
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        val memo : Memo = memoList?.get(p1) ?: Memo.emptyMemo()
+        val memo : Memo? = Memo.memoList?.get(p1)
 
-        p0.txtMemoTitle.setText(memo.title)
-        p0.txtMemoDate.setText(memo.date)
+        if(memo!=null && (Memo.memoList?.size ?: Memo.emptyMemoList.size) > 0){
+            p0.txtMemoTitle.setText(memo.title)
+            p0.txtMemoDate.setText(memo.date)
+        }
+
+    }
+
+    fun updateMemoList(){
+        notifyDataSetChanged()
     }
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtMemoTitle : TextView = itemView.findViewById(R.id.txtMemoTitle)
-        val txtMemoDate : TextView = itemView.findViewById(R.id.txtMemoDate)
+        val txtMemoTitle : TextView = itemView.txtMemoTitle
+        val txtMemoDate : TextView = itemView.txtMemoDate
     }
 }

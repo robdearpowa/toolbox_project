@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/etxtMemoTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:hint="Titolo"
+        android:maxLength="50"
+        tools:text=""/>
+    <EditText
+        android:id="@+id/etxtMemoContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:hint="Contenuto"
+        android:lines="3"
+        tools:text="Questo è un contenuto di prova\n lalalalalal"/>
+</LinearLayout>

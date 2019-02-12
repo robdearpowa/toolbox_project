@@ -1,12 +1,16 @@
 package com.example.testapp
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.app.LoaderManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +36,10 @@ private const val ARG_PARAM2 = "param2"
  */
 class MemoFragment : Fragment() {
 
-    private var memoList : MutableList<Memo>? = null
+    var lastMemoSelected : Int? = null
+
     private var memoListAdapter : MemoListAdapter? = null
-    private var memoListXML : RecyclerView? = null
+    var memoListXML : RecyclerView? = null; private set
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -46,8 +51,6 @@ class MemoFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-        memoList = mutableListOf()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,14 +61,19 @@ class MemoFragment : Fragment() {
         val btnAddMemo = v.btnAddMemo as FloatingActionButton
 
         btnAddMemo.setOnClickListener{
-            addMemo(Memo(memoList?.size!!.toLong(), "Memo" + memoList?.size, "Memo Content"))
+            /*Memo("Memo" + Memo.memoList?.size, "Memo Content")
+            Log.d("MemoList", Memo.memoList?.size.toString())
+            updateMemoListAdapter()*/
+            var md : MemoDialog = MemoDialog()
+            md.show(fragmentManager, "MemoCreate")
         }
 
+        memoSaver = activity!!.getPreferences(MODE_PRIVATE)
+        Memo.loadMemoList()
 
 
-        memoList?.add(Memo(1, "Memo Test", "Questo è un test di una memo"))
 
-        memoListAdapter = MemoListAdapter(memoList, v.context)
+        memoListAdapter = MemoListAdapter(v.context)
         memoListXML?.layoutManager = LinearLayoutManager(v.context)
         memoListXML?.adapter = memoListAdapter
 
@@ -73,10 +81,8 @@ class MemoFragment : Fragment() {
         return v
     }
 
-    fun addMemo(memo: Memo){
-        memoList?.add(memo)
-        memoListAdapter?.memoList = memoList
-        memoListAdapter?.notifyDataSetChanged();
+    fun updateMemoListAdapter(){
+        memoListAdapter?.updateMemoList();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -115,15 +121,10 @@ class MemoFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MemoFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+        lateinit var instance : MemoFragment
+        lateinit var memoSaver : SharedPreferences
+
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
                 MemoFragment().apply {
@@ -132,5 +133,9 @@ class MemoFragment : Fragment() {
                         putString(ARG_PARAM2, param2)
                     }
                 }
+    }
+
+    init {
+        instance = this
     }
 }
