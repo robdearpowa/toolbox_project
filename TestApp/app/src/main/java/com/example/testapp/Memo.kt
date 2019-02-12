@@ -16,7 +16,7 @@ class Memo(var title: String, var text: String){
     var id : UUID = UUID.randomUUID()
     //var title : String = title
     //var text : String = text
-    var date : String = Calendar.getInstance().time.toString()
+    var date : Date = Calendar.getInstance().time
 
     init {
         var result : Boolean = false
