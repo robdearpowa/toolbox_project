@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         tools:text="Placeholder Title"
         android:textColor="@android:color/black"
-        android:textSize="25dp"/>
+        android:textSize="20dp"/>
     <TextView
         android:id="@+id/txtMemoDate"
         android:layout_width="wrap_content"

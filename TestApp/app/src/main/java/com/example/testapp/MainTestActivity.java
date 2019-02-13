@@ -3,7 +3,10 @@ package com.example.testapp;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.admin.SystemUpdatePolicy;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.icu.util.LocaleData;
 import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.TabItem;
@@ -14,9 +17,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-public class MainTestActivity extends AppCompatActivity implements TimFragment.OnFragmentInteractionListener, CalcFragment.OnFragmentInteractionListener, AddressBookFragment.OnFragmentInteractionListener, MemoFragment.OnFragmentInteractionListener {
+import java.util.ArrayList;
+import java.util.List;
+
+import kotlin.collections.AbstractMutableList;
+
+public class MainTestActivity extends AppCompatActivity implements TimFragment.OnFragmentInteractionListener, CalcFragment.OnFragmentInteractionListener, AddressBookFragment.OnFragmentInteractionListener, MemoFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
     private Toolbar toolbar;
     private TabItem tabCalc;
@@ -27,10 +38,16 @@ public class MainTestActivity extends AppCompatActivity implements TimFragment.O
 
     private ValueAnimator animator;
 
+    public static MainTestActivity instance;
+    public static SharedPreferences settingsSaver;
+    public FancyBoxSettings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_test);
+
+        instance = this;
 
         //Ottengo le referenze degli elementi che servono
         tabContainer = findViewById(R.id.tabContainer);
@@ -40,7 +57,24 @@ public class MainTestActivity extends AppCompatActivity implements TimFragment.O
         toolbar = findViewById(R.id.toolbar);
         headerContainer = findViewById(R.id.headerContainer);
 
-        vpMain.setOffscreenPageLimit(2);
+        settingsSaver = getPreferences(MODE_PRIVATE);
+
+
+
+        settings = new FancyBoxSettings();
+        settings.loadSettings();
+
+
+
+
+
+        headerContainer.setBackgroundColor(settings.getTabColors() != null ? settings.getTabColors().get(settings.getInitialTab()) : FancyBoxSettings.Companion.defaulTabColors().get(FancyBoxSettings.Companion.getDefaultInitialTab()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(settings.getTabColors() != null ? settings.getTabColors().get(settings.getInitialTab()) : FancyBoxSettings.Companion.defaulTabColors().get(FancyBoxSettings.Companion.getDefaultInitialTab()));
+        }
+
+
+        vpMain.setOffscreenPageLimit(3);
 
         animator = new ValueAnimator();
 
@@ -71,7 +105,7 @@ public class MainTestActivity extends AppCompatActivity implements TimFragment.O
 
                 switch (tab.getPosition()){
                     case 0:
-                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary));
+                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), settings.getTabColors() != null ? settings.getTabColors().get(0) : FancyBoxSettings.Companion.defaulTabColors().get(0));
                         //toolbar.setBackgroundColor(ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary));
                         //tabContainer.setBackgroundColor(ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary));
                         //headerContainer.setBackgroundColor(ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary));
@@ -79,15 +113,20 @@ public class MainTestActivity extends AppCompatActivity implements TimFragment.O
 
                         break;
                     case 1:
-                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary2));
+                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), settings.getTabColors() != null ? settings.getTabColors().get(1) : FancyBoxSettings.Companion.defaulTabColors().get(1));
                         //toolbar.setBackgroundColor(ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary2));
                         //tabContainer.setBackgroundColor(ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary2));
                         //headerContainer.setBackgroundColor(ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary2));
                         animator.start();
                         break;
                     case 2:
-                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), ContextCompat.getColor(MainTestActivity.this, R.color.colorPrimary3));
+                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), settings.getTabColors() != null ? settings.getTabColors().get(2) : FancyBoxSettings.Companion.defaulTabColors().get(2));
                         animator.start();
+                        break;
+                    case 3:
+                        animator.setIntValues(((ColorDrawable)headerContainer.getBackground()).getColor(), settings.getTabColors() != null ? settings.getTabColors().get(3) : FancyBoxSettings.Companion.defaulTabColors().get(3));
+                        animator.start();
+                        break;
                     default:
                         break;
                 }
@@ -112,6 +151,8 @@ public class MainTestActivity extends AppCompatActivity implements TimFragment.O
 
         //Connetto il gestore delle tab al visualizzatore di pagine
         vpMain.addOnPageChangeListener( new TabLayout.TabLayoutOnPageChangeListener(tabContainer));
+
+        vpMain.setCurrentItem(settings.getInitialTab() != null ? settings.getInitialTab() : FancyBoxSettings.Companion.getDefaultInitialTab());
     }
 
 

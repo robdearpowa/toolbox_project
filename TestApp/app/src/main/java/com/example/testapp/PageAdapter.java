@@ -22,6 +22,8 @@ public class PageAdapter extends FragmentPagerAdapter {
                 return new TimFragment();
             case 2:
                 return new MemoFragment();
+            case 3:
+                return new SettingsFragment();
             default:
                 return null;
         }

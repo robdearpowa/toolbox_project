@@ -1,21 +1,18 @@
 package com.example.testapp
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v4.app.LoaderManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import kotlinx.android.synthetic.main.fragment_memo.view.*
+import android.widget.Spinner
+import android.widget.SpinnerAdapter
+import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_settings.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,27 +20,28 @@ import kotlinx.android.synthetic.main.fragment_memo.view.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-
-
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [MemoFragment.OnFragmentInteractionListener] interface
+ * [SettingsFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [MemoFragment.newInstance] factory method to
+ * Use the [SettingsFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class MemoFragment : Fragment() {
+class SettingsFragment : Fragment() {
 
-    var lastMemoSelected : Int? = null
 
-    private var memoListAdapter : MemoListAdapter? = null
-    var memoListXML : RecyclerView? = null; private set
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+
+    private lateinit var spinnerAdapter : TabSpinnerAdapter
+    private lateinit var spinnerXML : Spinner
+    private lateinit var btnSettings_save : Button
+
+    lateinit var tabList : MutableList<Tab>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,39 +53,33 @@ class MemoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.fragment_memo, container, false)
-
-        memoListXML = v.memoList as RecyclerView
-        val btnAddMemo = v.btnAddMemo as FloatingActionButton
-
-        btnAddMemo.setOnClickListener{
-            /*Memo("Memo" + Memo.memoList?.size, "Memo Content")
-            Log.d("MemoList", Memo.memoList?.size.toString())
-            updateMemoListAdapter()*/
-            var md : MemoDialog = MemoDialog()
-            md.show(fragmentManager, "MemoCreate")
-        }
-
-        memoSaver = activity!!.getPreferences(MODE_PRIVATE)
-        Memo.loadMemoList()
-
-
-
-        memoListAdapter = MemoListAdapter(v.context)
-        memoListXML?.layoutManager = LinearLayoutManager(v.context)
-        memoListXML?.adapter = memoListAdapter
-
-
-        if((0..30).random() == 0){
-            Memo("Mi metti 5 stelle?", "Se ti va, metti 5 stelle sull playstore!")
-            MemoFragment.instance.updateMemoListAdapter()
-        }
         // Inflate the layout for this fragment
-        return v
-    }
+        var v: View = inflater.inflate(R.layout.fragment_settings, container, false)
 
-    fun updateMemoListAdapter(){
-        memoListAdapter?.updateMemoList();
+        tabList = mutableListOf()
+        spinnerXML = v.tabSpinner1
+        btnSettings_save = v.btnSettings_save
+
+        tabList.add(Tab(0, "Calcolatrice"))
+        tabList.add(Tab(1, "Timer"))
+        tabList.add(Tab(2, "Memo"))
+        tabList.add(Tab(3, "Impostazioni"))
+
+
+        spinnerAdapter = TabSpinnerAdapter(context!!, R.layout.tab_text_spinner_layout, tabList)
+
+        spinnerXML.adapter = spinnerAdapter
+
+        spinnerXML.setSelection(MainTestActivity.instance.settings.initialTab ?: FancyBoxSettings.defaultInitialTab)
+
+        btnSettings_save.setOnClickListener(View.OnClickListener { v: View? ->
+            MainTestActivity.instance.settings.initialTab = spinnerXML.selectedItemPosition
+            MainTestActivity.instance.settings.saveSettings()
+            Toast.makeText(context, "Impostazioni Salvate", Toast.LENGTH_SHORT).show()
+        })
+
+
+        return v
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -126,21 +118,24 @@ class MemoFragment : Fragment() {
     }
 
     companion object {
-        lateinit var instance : MemoFragment
-        lateinit var memoSaver : SharedPreferences
 
 
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment SettingsFragment.
+         */
+        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                MemoFragment().apply {
+                SettingsFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
                     }
                 }
-    }
-
-    init {
-        instance = this
     }
 }

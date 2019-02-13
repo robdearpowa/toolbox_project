@@ -1,12 +1,8 @@
 package com.example.testapp
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.lang.StringBuilder
-import java.lang.reflect.Type
-import java.time.LocalDateTime
 import java.util.*
 
 

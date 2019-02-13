@@ -22,7 +22,7 @@
         android:layout_gravity="right|bottom"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/colorPrimary3"
+        android:backgroundTint="@color/colorPrimary"
         app:borderWidth="0dp"/>
 
 </FrameLayout>
