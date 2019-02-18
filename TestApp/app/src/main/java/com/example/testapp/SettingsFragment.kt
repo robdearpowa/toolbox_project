@@ -54,7 +54,7 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var v: View = inflater.inflate(R.layout.fragment_settings, container, false)
+        val v: View = inflater.inflate(R.layout.fragment_settings, container, false)
 
         tabList = mutableListOf()
         spinnerXML = v.tabSpinner1
